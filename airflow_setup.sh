@@ -1,24 +1,23 @@
 #!/bin/bash
+set -e  # Para o script em caso de erro
 
-# Ativar sudo sem senha para o usuário jovyan
-echo "jovyan ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+# Aguardar 2 minutos antes de iniciar o setup
+echo "Aguardando 10 segs antes de iniciar o setup..."
+sleep 10  # Aguarda 120 segundos (2 minutos)
 
-# Instalar o pacote soccerdata
+echo "Atualizando o pip para a versão mais recente..."
 pip install --upgrade pip
+
+
+echo "Instalando o pacote soccerdata..."
 pip install soccerdata
-
-echo "Instalando o pacote tor..."
-# Instala o Tor sem pedir confirmação (usando o -y para aceitar automaticamente)
-sudo apt-get update -y
-sudo apt-get install -y tor
-
 
 # Testar se o pacote soccerdata está funcionando
 echo "Testando o pacote soccerdata..."
 python -c "import soccerdata; print('Soccerdata funcionando!')"
 
 # Criar diretório e arquivo de configuração para o soccerdata
-SOCCERDATA_CONFIG_DIR="/home/jovyan/soccerdata/config"
+SOCCERDATA_CONFIG_DIR="/home/airflow/soccerdata/config"
 LEAGUE_DICT_FILE="$SOCCERDATA_CONFIG_DIR/league_dict.json"
 
 if [ ! -d "$SOCCERDATA_CONFIG_DIR" ]; then
@@ -51,5 +50,7 @@ else
     echo "Arquivo league_dict.json já existe."
 fi
 
-# Iniciar o Jupyter Lab
-exec jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token=''
+echo "Setup do Airflow concluído!"
+
+# Iniciar o Airflow webserver como processo principal
+#exec airflow webserver -p 8080
