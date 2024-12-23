@@ -12,7 +12,6 @@ echo "Instalando o pacote tor..."
 sudo apt-get update -y
 sudo apt-get install -y tor
 
-
 # Testar se o pacote soccerdata está funcionando
 echo "Testando o pacote soccerdata..."
 python -c "import soccerdata; print('Soccerdata funcionando!')"
@@ -49,6 +48,19 @@ EOL
     echo "Arquivo league_dict.json criado com sucesso em $LEAGUE_DICT_FILE!"
 else
     echo "Arquivo league_dict.json já existe."
+fi
+
+# Ajustar permissões em toda a pasta /home/jovyan
+JOVYAN_HOME="/home/jovyan"
+if [ -d "$JOVYAN_HOME" ]; then
+    echo "Ajustando permissões na pasta $JOVYAN_HOME..."
+    chmod -R 777 "$JOVYAN_HOME"
+    echo "Permissões ajustadas com sucesso!"
+else
+    echo "Pasta $JOVYAN_HOME não encontrada. Criando agora..."
+    mkdir -p "$JOVYAN_HOME"
+    chmod -R 777 "$JOVYAN_HOME"
+    echo "Pasta $JOVYAN_HOME criada e permissões ajustadas!"
 fi
 
 # Iniciar o Jupyter Lab
