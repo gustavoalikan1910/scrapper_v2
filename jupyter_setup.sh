@@ -7,6 +7,9 @@ echo "jovyan ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 pip install --upgrade pip
 pip install soccerdata
 
+echo "Instalando pacotes necessários (soccerdata, pyspark)..."
+pip install soccerdata pyspark
+
 echo "Instalando o pacote tor..."
 # Instala o Tor sem pedir confirmação (usando o -y para aceitar automaticamente)
 sudo apt-get update -y
@@ -63,5 +66,30 @@ else
     echo "Pasta $JOVYAN_HOME criada e permissões ajustadas!"
 fi
 
+# Criar as pastas /home/jovyan/json e /home/jovyan/delta_tables
+JSON_DIR="$JOVYAN_HOME/json"
+DELTA_DIR="$JOVYAN_HOME/delta_tables"
+
+if [ ! -d "$JSON_DIR" ]; then
+    mkdir -p "$JSON_DIR"
+    echo "Pasta $JSON_DIR criada com sucesso!"
+fi
+q
+if [ ! -d "$DELTA_DIR" ]; then
+    mkdir -p "$DELTA_DIR"
+    echo "Pasta $DELTA_DIR criada com sucesso!"
+fi
+
+# Ajustar permissões nas pastas criadas
+chmod -R 777 "$JSON_DIR"
+chmod -R 777 "$DELTA_DIR"
+echo "Permissões ajustadas para $JSON_DIR e $DELTA_DIR!"
+
+# Adicione esta linha ao final
+touch /tmp/jupyter_ready
+echo "Jupyter inicializado com sucesso!"
+
+
 # Iniciar o Jupyter Lab
 exec jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token=''
+

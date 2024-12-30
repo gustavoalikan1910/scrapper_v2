@@ -10,6 +10,7 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
       - /home/ubuntu/scrapper_v2:/home/ubuntu/scrapper_v2
+      - /tmp:/tmp
     environment:
       JUPYTER_ENABLE_LAB: "yes"
       GRANT_SUDO: "yes"
@@ -34,6 +35,7 @@ services:
       - ./postgres_data:/var/lib/postgresql/data
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+      - /tmp:/tmp
     depends_on:
       - jupyterlab
 
@@ -55,6 +57,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ./jupyter_notebooks:/home/jovyan
       - ./airflow_setup.sh:/usr/local/bin/airflow_setup.sh:ro
+      - /tmp:/tmp
     depends_on:
       - postgres
       - jupyterlab
@@ -82,6 +85,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ./jupyter_notebooks:/home/jovyan
       - ./airflow_scheduler_setup.sh:/usr/local/bin/airflow_scheduler_setup.sh:ro
+      - /tmp:/tmp
     depends_on:
       - postgres
       - airflow
@@ -92,6 +96,6 @@ services:
       airflow db init &&
       airflow scheduler
       "
-
+      
 volumes:
   postgres_data:

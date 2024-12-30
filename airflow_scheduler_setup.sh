@@ -1,20 +1,16 @@
 #!/bin/bash
 set -e  # Para o script em caso de erro
 
-# Aguardar 10 segundos antes de iniciar o setup
-echo "Aguardando 10 segs antes de iniciar o setup..."
-sleep 10  # Aguarda 10 segundos
-
 echo "Iniciando o setup do Airflow Scheduler..."
 
 # Atualizar o pip
 echo "Atualizando o pip para a versão mais recente..."
 pip install --upgrade pip
 
-
-# Instalar o pacote soccerdata
-echo "Instalando o pacote soccerdata..."
+echo "Instalando pacotes necessários (soccerdata, pyspark)..."
 pip install soccerdata
+pip install pyspark==3.3.0
+
 
 # Testar se o pacote soccerdata está funcionando
 echo "Testando o pacote soccerdata..."
@@ -54,3 +50,7 @@ else
 fi
 
 echo "Setup do Scheduler concluído!"
+
+# Adicione esta linha ao final
+touch /tmp/airflow_scheduler_ready
+echo "Scheduler do Airflow inicializado com sucesso!"

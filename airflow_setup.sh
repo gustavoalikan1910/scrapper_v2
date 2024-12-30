@@ -5,12 +5,17 @@ set -e  # Para o script em caso de erro
 echo "Aguardando 10 segs antes de iniciar o setup..."
 sleep 10  # Aguarda 120 segundos (2 minutos)
 
+
+
 echo "Atualizando o pip para a versão mais recente..."
 pip install --upgrade pip
 
 
-echo "Instalando o pacote soccerdata..."
+echo "Instalando pacotes necessários (soccerdata, pyspark)..."
 pip install soccerdata
+pip install pyspark==3.3.0
+
+
 
 # Testar se o pacote soccerdata está funcionando
 echo "Testando o pacote soccerdata..."
@@ -51,6 +56,10 @@ else
 fi
 
 echo "Setup do Airflow concluído!"
+
+# Adicione esta linha ao final
+touch /tmp/airflow_ready
+echo "Airflow inicializado com sucesso!"
 
 # Iniciar o Airflow webserver como processo principal
 #exec airflow webserver -p 8080

@@ -1,11 +1,17 @@
 FROM apache/airflow:2.6.3-python3.9
 
-# Instale o Tor e outras dependências necessárias
+# Execute como root para instalar dependências
 USER root
-RUN apt-get update && \
-    apt-get install -y tor && \
+RUN apt-get update && apt-get install -y \
+    tor \
+    openjdk-11-jdk \
+    procps && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Retorne ao usuário padrão do Airflow
+# Configurar JAVA_HOME e atualizar o PATH
+ENV JAVA_HOME="/usr/lib/jvm/java-11-openjdk-arm64"
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+
+# Voltar para o usuário padrão do Airflow
 USER airflow
