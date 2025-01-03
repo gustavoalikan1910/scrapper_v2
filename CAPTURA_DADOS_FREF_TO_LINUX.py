@@ -61,7 +61,7 @@ tor_process = start_tor()
 
 # Define quais temporadas carregar
 if reproc=="True":
-    season_list = ['2021', '2020']
+    season_list = ['2024']
 else:
     current_year = datetime.now().year
     season_list = [str(current_year)]

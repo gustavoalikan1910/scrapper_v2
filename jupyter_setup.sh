@@ -9,6 +9,7 @@ pip install soccerdata
 
 echo "Instalando pacotes necessários (soccerdata, pyspark)..."
 pip install soccerdata pyspark
+pip install psycopg2-binary
 
 echo "Instalando o pacote tor..."
 # Instala o Tor sem pedir confirmação (usando o -y para aceitar automaticamente)
@@ -84,6 +85,10 @@ fi
 chmod -R 777 "$JSON_DIR"
 chmod -R 777 "$DELTA_DIR"
 echo "Permissões ajustadas para $JSON_DIR e $DELTA_DIR!"
+
+# Baixar o driver JDBC do PostgreSQL
+wget https://jdbc.postgresql.org/download/postgresql-42.5.4.jar -P /tmp
+
 
 # Adicione esta linha ao final
 touch /tmp/jupyter_ready

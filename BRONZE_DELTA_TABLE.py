@@ -114,7 +114,7 @@ def processar_arquivo(dado):
 
         print(f"Criando tabela Delta em: {output_path}")
         df.write.format("delta") \
-            .mode("append") \
+            .mode("overwrite") \
             .option("mergeSchema", "true") \
             .partitionBy("ano") \
             .save(output_path)
