@@ -14,6 +14,7 @@ pip install --upgrade pip
 echo "Instalando pacotes necessários (soccerdata, pyspark)..."
 pip install soccerdata
 pip install pyspark==3.3.0
+pip install delta-spark==2.2.0
 
 
 

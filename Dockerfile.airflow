@@ -13,5 +13,11 @@ RUN apt-get update && apt-get install -y \
 ENV JAVA_HOME="/usr/lib/jvm/java-11-openjdk-arm64"
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
+# Criar o diretório /home/jovyan e aplicar permissões
+RUN mkdir -p /home/jovyan && \
+    chmod -R 777 /home/jovyan && \
+    echo "umask 000" >> /etc/profile
+
+
 # Voltar para o usuário padrão do Airflow
 USER airflow
