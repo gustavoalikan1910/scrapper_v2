@@ -84,7 +84,7 @@ for id_camp in competicao:
     for key, url in urls.items():
         try:
             if i > 0:
-                time.sleep(5)
+                time.sleep(30)
 
             df = pd.read_html(url, encoding='latin1')[1]  # Selecionar o segundo dataframe
             

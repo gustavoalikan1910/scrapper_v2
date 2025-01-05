@@ -7,10 +7,15 @@ echo "Iniciando o setup do Airflow Scheduler..."
 echo "Atualizando o pip para a versão mais recente..."
 pip install --upgrade pip
 
+
 echo "Instalando pacotes necessários (soccerdata, pyspark)..."
 pip install soccerdata
 pip install pyspark==3.3.0
 pip install delta-spark==2.2.0
+pip install google-generativeai --break-system-packages
+pip install pyttsx3 --break-system-packages
+pip install SpeechRecognition --break-system-packages
+
 
 # Testar se o pacote soccerdata está funcionando
 echo "Testando o pacote soccerdata..."

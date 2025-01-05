@@ -1,9 +1,11 @@
 import sys
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import input_file_name, lit
+from pyspark.sql.functions import input_file_name, lit, col
 import os
+import shutil
 import re
 from concurrent.futures import ThreadPoolExecutor
+from delta.tables import DeltaTable
 
 # Verifica se os parâmetros foram passados
 if len(sys.argv) != 3:
@@ -12,10 +14,6 @@ if len(sys.argv) != 3:
 
 competicao_param = sys.argv[1]  # Obtém o nome da competição como argumento
 source_param = sys.argv[2]  # Obtém o nome da fonte (fbref ou ogol)
-#competicao_param = "copadobrasil"
-#source_param = "ogol"
-
-
 
 # Inicializa a SparkSession com as configurações otimizadas
 spark = SparkSession.builder \
@@ -47,6 +45,7 @@ spark = SparkSession.builder \
 
 # Configuração de caminhos
 input_path = "/home/jovyan/json"
+processed_path = "/home/jovyan/json/processed"
 output_base_path = "/home/jovyan/delta_tables/bronze"
 
 # Definir regex com base no parâmetro source
@@ -86,13 +85,16 @@ def processar_arquivo(dado):
     arquivo = dado['arquivo']
     competicao = dado['competicao']
     nivel = dado.get('nivel', 'unknown')
-    # Define granularidade apenas se ela existir
     granularidade = dado.get('granularidade') if source_param == "fbref" else None
     tipo = dado['tipo']
     ano = dado['ano']
 
     caminho_arquivo = f"{input_path}/{arquivo}"
 
+    # Garantir que o diretório 'processed_path' existe
+    if not os.path.exists(processed_path):
+        os.makedirs(processed_path)
+    
     try:
         print(f"Lendo o arquivo: {caminho_arquivo}")
         df = spark.read.json(caminho_arquivo)
@@ -112,14 +114,34 @@ def processar_arquivo(dado):
         else:
             output_path = f"{output_base_path}/{competicao}_{nivel}_{tipo}"
 
-        print(f"Criando tabela Delta em: {output_path}")
-        df.write.format("delta") \
-            .mode("overwrite") \
-            .option("mergeSchema", "true") \
-            .partitionBy("ano") \
-            .save(output_path)
+        print(f"Atualizando tabela Delta em: {output_path}")
 
-        print(f"Tabela Delta criada com sucesso: {output_path}")
+        if DeltaTable.isDeltaTable(spark, output_path):
+            # Carrega a tabela Delta existente
+            delta_table = DeltaTable.forPath(spark, output_path)
+
+            # Define o ano do `source` para exclusão no `target`
+            ano_to_update = df.select("ano").distinct().collect()[0]["ano"]
+
+            # Apaga todas as linhas do ano no `target`
+            print(f"Apagando linhas do ano {ano_to_update} na tabela Delta...")
+            delta_table.delete(col("ano") == ano_to_update)
+
+            # Insere as novas linhas do `source`
+            print(f"Inserindo novas linhas do ano {ano_to_update} na tabela Delta...")
+            df.write.format("delta").mode("append").save(output_path)
+        else:
+            # Cria uma nova tabela Delta se não existir
+            df.write.format("delta") \
+                .mode("overwrite") \
+                .partitionBy("ano") \
+                .save(output_path)
+
+        # Move o arquivo para a pasta processed
+        destino_arquivo = f"{processed_path}/{arquivo}"
+        shutil.move(caminho_arquivo, destino_arquivo)
+        print(f"Arquivo movido para: {destino_arquivo}")
+
     except Exception as e:
         print(f"Erro ao processar {arquivo}: {e}")
 
