@@ -10,11 +10,15 @@ pip install soccerdata
 echo "Instalando pacotes necessários (soccerdata, pyspark)..."
 pip install soccerdata pyspark
 pip install psycopg2-binary
+pip install google.generativeai
+pip install flask
 
 echo "Instalando o pacote tor..."
 # Instala o Tor sem pedir confirmação (usando o -y para aceitar automaticamente)
 sudo apt-get update -y
 sudo apt-get install -y tor
+sudo apt-get install curl -y
+
 
 # Testar se o pacote soccerdata está funcionando
 echo "Testando o pacote soccerdata..."

@@ -4,6 +4,7 @@ services:
     container_name: jupyterlab_pyspark
     ports:
       - "8888:8888"
+      - "5000:5000"
     volumes:
       - ./jupyter_notebooks:/home/jovyan
       - ./jupyter_setup.sh:/usr/local/bin/jupyter_setup.sh:ro
@@ -11,6 +12,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /home/ubuntu/scrapper_v2:/home/ubuntu/scrapper_v2
       - /tmp:/tmp
+      - ./webhook:/home/jovyan/webhook
     environment:
       JUPYTER_ENABLE_LAB: "yes"
       GRANT_SUDO: "yes"
@@ -20,6 +22,8 @@ services:
       TZ: "America/Sao_Paulo"
     user: root
     command: ["bash", "/usr/local/bin/jupyter_setup.sh"]
+    networks:
+      - minha_rede_compartilhada
 
   postgres:
     image: postgres:14
@@ -418,6 +422,33 @@ services:
     - zklogs:/var/lib/zookeeper/log
     networks:
       - minha_rede_compartilhada
+      
+  flask_api:
+    image: python:3.9-slim  # Base diretamente na imagem oficial do Python
+    container_name: flask_api
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./api:/api  # Monta o código local em /api
+      - ./flask_setup.sh:/usr/local/bin/flask_setup.sh:ro  # Monta o script de setup
+    working_dir: /api
+    environment:
+      DB_HOST: postgres_db
+      DB_PORT: 5432
+      DB_NAME: meu_banco
+      DB_USER: admin
+      DB_PASSWORD: admin
+    depends_on:
+      - postgres
+    networks:
+      - minha_rede_compartilhada
+    entrypoint: >
+      bash -c "
+      bash /usr/local/bin/flask_setup.sh &&
+      python app.py
+      "
+
+
     
 volumes:
   postgres_data:
