@@ -52,12 +52,13 @@ def run_delta_script():
 def run_silver_script():
     script_path = "/home/jovyan/DELTA_TO_SILVERv2.py"
     python_path = "/usr/local/bin/python"
-    competicao = "brasileirao"   
-    ano = '2024'
+    competicao = "brasileirao"
+    ano = '2024' 
     
     try:
         result = subprocess.run(
-            [python_path, script_path, competicao, ano],
+            #[python_path, script_path, competicao, ano], #reprocessamento anos anteriores
+            [python_path, script_path, competicao],
             check=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,

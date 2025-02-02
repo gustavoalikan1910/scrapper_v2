@@ -56,7 +56,8 @@ def run_silver_script():
     
     try:
         result = subprocess.run(
-            [python_path, script_path, competicao, ano],
+            #[python_path, script_path, competicao, ano], #reprocessamento anos anteriores
+            [python_path, script_path, competicao],
             check=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
