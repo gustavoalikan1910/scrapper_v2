@@ -279,26 +279,33 @@ def consultar_tabela(nome_tabela):
 @jwt_required()
 def executar_script():
     try:
-        # Executa o script externo
+        # ✅ Executa o script e captura a saída
         result = subprocess.run(
-            ["python3", "/api/integra_security_list.py"],  # Caminho para o script
-            capture_output=True, text=True
+            ["python3", "/api/integra_security_list.py"],
+            capture_output=True, text=True, encoding="utf-8"
         )
 
-        # Verifica se o script foi executado com sucesso
+        # ✅ Divide os logs em uma lista de strings (melhor para o Postman)
+        stdout_lines = result.stdout.strip().split("\n") if result.stdout else []
+        stderr_lines = result.stderr.strip().split("\n") if result.stderr else []
+
+        # ✅ Se o script foi executado com sucesso (código 0)
         if result.returncode == 0:
             return jsonify({
-                'mensagem': "Script executado com sucesso!",
-                'saida': result.stdout
+                "mensagem": "Script executado com sucesso!",
+                "logs": stdout_lines  # Agora os logs são uma lista, mais fácil de visualizar no Postman
             }), 200
         else:
             return jsonify({
-                'erro': "Erro ao executar o script.",
-                'saida': result.stdout,
-                'erro_saida': result.stderr
+                "erro": "Erro ao executar o script.",
+                "logs": stdout_lines,
+                "erro_saida": stderr_lines
             }), 500
+
     except Exception as e:
-        return jsonify({'erro': f"Erro ao tentar executar o script: {e}"}), 500
+        return jsonify({
+            "erro": f"Erro ao tentar executar o script: {str(e)}"
+        }), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

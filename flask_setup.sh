@@ -13,7 +13,7 @@ fi
 
 # Instalar outras bibliotecas necessárias
 echo "Instalando bibliotecas adicionais..."
-pip install flask-jwt-extended flask-limiter psycopg2-binary pytz
+pip install flask-jwt-extended flask-limiter psycopg2-binary pytz gspread oauth2client oci flasgger
 
 # Mensagem final
 echo "Setup do Flask finalizado com sucesso!"

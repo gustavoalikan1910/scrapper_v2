@@ -1,0 +1,14 @@
+[DEFAULT]
+user=ocid1.user.oc1..aaaaaaaaexgyvmsmvqtjcekq4jep5g2yst7dt46anl5zznxqqpcsigyn2a3q
+fingerprint=c3:ea:69:5b:5f:86:ef:50:37:e0:e1:7b:fd:dc:d4:48
+key_file=/api/oci/oci_api_key.pem
+tenancy=ocid1.tenancy.oc1..aaaaaaaagblxatz4lkvyxz6cwwpj5s3i5m3poqejtqkwrl2fnrqm2amnpwwq
+region=sa-saopaulo-1
+
+
+[GUSTAVOALIKAN1910]
+user=ocid1.user.oc1..aaaaaaaaexgyvmsmvqtjcekq4jep5g2yst7dt46anl5zznxqqpcsigyn2a3q
+fingerprint=c3:ea:69:5b:5f:86:ef:50:37:e0:e1:7b:fd:dc:d4:48
+key_file=/api/oci/oci_api_key.pem
+tenancy=ocid1.tenancy.oc1..aaaaaaaagblxatz4lkvyxz6cwwpj5s3i5m3poqejtqkwrl2fnrqm2amnpwwq
+region=sa-saopaulo-1
