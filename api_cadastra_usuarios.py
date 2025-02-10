@@ -21,36 +21,14 @@ dag = DAG(
     catchup=False,
 )
 
-# Função para obter o token JWT
-def obter_token_jwt():
-    try:
-        url = "http://132.226.254.126:5001/login"  # Substitua pelo endereço correto da API
-        payload = {
-            "email": "airflow@gmail.com"  # Substitua pelo email válido
-        }
-        
-        # Faz o login e obtém o token
-        response = requests.post(url, json=payload)
-        response.raise_for_status()
-        
-        # Retorna o token
-        token = response.json().get("access_token")
-        if not token:
-            raise Exception("Não foi possível obter o token JWT.")
-        return token
-    except Exception as e:
-        print(f"Erro ao obter o token JWT: {e}")
-        raise
 
 # Função para chamar a API
 def chamar_api():
     try:
-        # Obtém o token JWT
-        token = obter_token_jwt()
         
         url = "http://132.226.254.126:5001/executar-script"  # URL da API Flask
         headers = {
-            "Authorization": f"Bearer {token}"
+            "email": "airflow@gmail.com"  # Passa o email no cabeçalho
         }
         
         # Faz a requisição POST
